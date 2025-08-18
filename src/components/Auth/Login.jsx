@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bgLogo from 'src/img/logo.png'; 
 
 const Login = ({ handleLogin, onSwitch }) => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Login = ({ handleLogin, onSwitch }) => {
     <div
       className="relative flex h-screen w-screen items-center justify-center"
       style={{
-        backgroundImage: "url('/img/logo.png')",
+        backgroundImage: `url(${bgLogo})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
