@@ -15,7 +15,7 @@ const Login = ({ handleLogin, onSwitch }) => {
     <div
       className="relative flex h-screen w-screen items-center justify-center"
       style={{
-        backgroundImage: "url('src/img/logo.png')",
+        backgroundImage: "url('/img/logo.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
