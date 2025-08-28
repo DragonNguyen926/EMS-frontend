@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Login = ({ handleLogin, onSwitch }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // ✅ lock body scroll
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -41,7 +50,7 @@ const Login = ({ handleLogin, onSwitch }) => {
           <p className="text-sm text-gray-300/90">Welcome back — sign in to continue</p>
         </div>
 
-        {/* your original form & logic (unchanged) */}
+        {/* form */}
         <form onSubmit={submitHandler} className="flex flex-col gap-4">
           <input
             value={email}
