@@ -12,7 +12,7 @@ const Register = ({ onSwitch }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // ✅ fetch groups
+  // fetch groups
   useEffect(() => {
     (async () => {
       try {
@@ -30,7 +30,7 @@ const Register = ({ onSwitch }) => {
     })();
   }, []);
 
-  // ✅ lock body scroll while on this page
+  // lock scroll
   useEffect(() => {
     const original = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -45,24 +45,14 @@ const Register = ({ onSwitch }) => {
     setSuccess('');
 
     const nameRegex = /^[A-Za-z]+$/;
-    if (!nameRegex.test(firstName)) {
-      return setError('First name must only contain letters.');
-    }
-
-    if (!email.endsWith('@ramp.mem')) {
-      return setError('Email must end with @ramp.mem');
-    }
+    if (!nameRegex.test(firstName)) return setError('First name must only contain letters.');
+    if (!email.endsWith('@ramp.mem')) return setError('Email must end with @ramp.mem');
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
-      return setError(
-        'Password must be at least 8 chars, include 1 uppercase, 1 lowercase, and 1 number.'
-      );
+      return setError('Password must be at least 8 chars, include 1 uppercase, 1 lowercase, and 1 number.');
     }
-
-    if (!groupId) {
-      return setError('Please choose a group.');
-    }
+    if (!groupId) return setError('Please choose a group.');
 
     try {
       const res = await fetch(`${API}/register`, {
@@ -77,19 +67,12 @@ const Register = ({ onSwitch }) => {
       });
 
       const data = await res.json();
-
       if (!res.ok) {
         setError(data.message || 'Registration failed');
       } else {
         setSuccess('Account created successfully! Redirecting to login...');
-        setFirstName('');
-        setEmail('');
-        setPassword('');
-        setGroupId('');
-
-        setTimeout(() => {
-          if (onSwitch) onSwitch();
-        }, 2000);
+        setFirstName(''); setEmail(''); setPassword(''); setGroupId('');
+        setTimeout(() => { if (onSwitch) onSwitch(); }, 2000);
       }
     } catch (err) {
       console.error('Error registering:', err);
@@ -99,7 +82,7 @@ const Register = ({ onSwitch }) => {
 
   return (
     <div
-      className="relative flex h-screen w-screen items-center justify-center"
+      className="relative flex min-h-[100svh] w-full items-center justify-center overflow-x-hidden"
       style={{
         backgroundImage: "url('/img/logo.png')",
         backgroundSize: 'cover',
@@ -109,23 +92,19 @@ const Register = ({ onSwitch }) => {
       {/* dark overlay */}
       <div className="absolute inset-0 bg-[#0b1020]/70" />
 
-      {/* glows */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-[110px]" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-[28rem] w-[28rem] rounded-full bg-blue-600/20 blur-[140px]" />
-
       {/* card */}
-      <div className="relative z-10 w-[400px] rounded-2xl border border-white/10 bg-white/5 p-8 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl">
-        <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <div className="relative">
-            <div className="absolute inset-0 -m-2 rounded-full bg-gradient-to-tr from-emerald-400/40 via-blue-500/30 to-transparent blur-xl" />
-            <div className="relative grid h-24 w-24 place-items-center rounded-full border border-white/20 bg-white/10 shadow-inner">
-              <span className="text-white text-xl font-bold tracking-widest">RAMP</span>
-            </div>
-          </div>
-          <h2 className="text-2xl font-semibold tracking-tight text-white">Create Account</h2>
-          <p className="text-sm text-gray-300/90">Join the team — set up your access</p>
+      <div className="relative z-10 w-[92vw] max-w-[400px] rounded-xl md:rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+        {/* brand header - text only */}
+        <div className="mb-5 md:mb-6 flex flex-col items-center gap-2 text-center">
+        <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">
+  RAMP
+</h1>
+
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">Create Account</h2>
+          <p className="text-xs md:text-sm text-gray-300/90">Join the team — set up your access</p>
         </div>
 
+        {/* alerts */}
         {error && (
           <div className="mb-3 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
             {error}
@@ -137,7 +116,8 @@ const Register = ({ onSwitch }) => {
           </div>
         )}
 
-        <form onSubmit={handleRegister} className="flex flex-col gap-4">
+        {/* form */}
+        <form onSubmit={handleRegister} className="flex flex-col gap-3.5 md:gap-4">
           <input
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -163,22 +143,22 @@ const Register = ({ onSwitch }) => {
             required
           />
 
+          {/* group dropdown */}
           <div className="relative">
             <select
               value={groupId}
               onChange={(e) => setGroupId(e.target.value)}
-              className="appearance-none w-full outline-none bg-white/5 border border-white/15 text-base py-2.5 px-4 pr-10 rounded-xl text-white placeholder-gray-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition"
+              className="appearance-none w-full outline-none bg-white/5 border border-white/15 text-base py-2.5 px-4 pr-10 rounded-xl text-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition"
               required
             >
-              <option value="" className="bg-[#0b1020] text-gray-300">
-                Select Group
-              </option>
+              <option value="" className="bg-[#0b1020] text-gray-300">Select Group</option>
               {groups.map((g) => (
                 <option key={g.id} value={g.id} className="bg-[#0b1020] text-white">
                   {g.name}
                 </option>
               ))}
             </select>
+            {/* chevron */}
             <svg
               className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300/80"
               viewBox="0 0 20 20"
